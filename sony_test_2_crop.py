@@ -14,9 +14,9 @@ from inpaint_model import InpaintCAModel
 parser = argparse.ArgumentParser()
 parser.add_argument('--checkpoint_dir', default='', type=str,
                     help='The directory of tensorflow checkpoint.')
-parser.add_argument('--width', default=1920, type=int,
+parser.add_argument('--width', default=400, type=int,
                     help='width of the video')
-parser.add_argument('--height', default=1080, type=int,
+parser.add_argument('--height', default=400, type=int,
                     help='height of the video')
 
 if __name__ == "__main__":
@@ -81,17 +81,17 @@ if __name__ == "__main__":
 
     ## 3. iterate over the videos and extract frames and based on the position
     ## map crear the logo and re paint the frame
-    print(1, os.listdir(VIDEO_DIR))
+    print(1111111111, os.listdir(VIDEO_DIR))
     for video_name in os.listdir(VIDEO_DIR):
         video_path = os.path.join(VIDEO_DIR, video_name)
         mask_path = os.path.join(MASK_DIR, video_name).replace('mp4', 'png').replace('MP4', 'png')
-        print(2, mask_path, video_path)
+        print(2222222222, mask_path, video_path)
 
-        ''' shutil.rmtree(TEMP_INPUT_DIR)
+        shutil.rmtree(TEMP_INPUT_DIR)
         shutil.rmtree(TEMP_OUTPUT_DIR)
         os.mkdir(TEMP_INPUT_DIR)
         os.mkdir(TEMP_OUTPUT_DIR)
-        os.system(f'ffmpeg -i {video_path} {TEMP_INPUT_DIR}/%05d.png') '''
+        os.system(f'ffmpeg -i {video_path} {TEMP_INPUT_DIR}/%05d.png')
 
         i = 0
         for image_name in os.listdir(TEMP_INPUT_DIR):
@@ -100,7 +100,16 @@ if __name__ == "__main__":
 
             ## 4. load the image and mask for inference
             image = cv2.imread(image_path)
+            image_orig = image.copy()
             mask = cv2.imread(mask_path)
+            mask_orig = mask.copy()
+
+            ## crop the image
+            image = image[:400, image.shape[1]-400:, :]
+            cv2.imwrite('a.png', image)
+            mask = mask[:400, mask.shape[1]-400:, :]
+            cv2.imwrite('b.png', mask)
+
             # mask = cv2.resize(mask, (0,0), fx=0.5, fy=0.5)
             print(image.shape, mask.shape)
             assert image.shape == mask.shape
@@ -117,10 +126,13 @@ if __name__ == "__main__":
             input_image_mask = np.concatenate([image, mask], axis=2)           
             
             result = sess.run(output, feed_dict={input_image:input_image_mask})
-            cv2.imwrite(output_path, result[0][:, :, ::-1])
+            # cv2.imwrite(output_path,result[0][:, :, ::-1])
+            result = result[0][:, :, ::-1]
+            image_orig[mask_orig > 0] = result[mask[0] > 0]
+            cv2.imwrite(output_path, image_orig)
 
             # test(image_path, mask_path, checkpoint_dir, output_path)
             
         ## 4. stitch the repainted frames and store them in a output dir
-        os.system(f'ffmpeg -i {TEMP_OUTPUT_DIR}/%05d.png -crf 0 {OUTPUT_DIR}/{video_name}')
+        os.system(f'ffmpeg -i {TEMP_OUTPUT_DIR}/%05d.png {OUTPUT_DIR}/{video_name}')
     
