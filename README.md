@@ -1,3 +1,14 @@
+# Run inferencing on a video without cropping or resizing
+1. open sony_test_2.py and keep appropriate values to VIDEO_DIR, MASK_DIR, OUTPUT_DIR, TEMP_DIR, TEMP_INPUT_DIR, TEMP_OUTPUT_DIR in case you don't want to use the default values
+2. Download the weights from https://myelinf.sharepoint.com/sites/SoRos/Shared%20Documents/Forms/AllItems.aspx?viewid=49684650%2D1efa%2D4e8b%2D8843%2D39cb80b6ec0d&id=%2Fsites%2FSoRos%2FShared%20Documents%2FSony%20Logo%20inpainting%2Fweights 
+3. then run python sony_test_2.py --checkpoint_dir model_logs/release_places2_256_deepfill_v2 
+
+# Run inferencing on a video with cropping
+1. open sony_test_2_crop.py and keep appropriate values to VIDEO_DIR, MASK_DIR, OUTPUT_DIR, TEMP_DIR, TEMP_INPUT_DIR, TEMP_OUTPUT_DIR in case you don't want to use the default values
+2. Download the weights from https://myelinf.sharepoint.com/sites/SoRos/Shared%20Documents/Forms/AllItems.aspx?viewid=49684650%2D1efa%2D4e8b%2D8843%2D39cb80b6ec0d&id=%2Fsites%2FSoRos%2FShared%20Documents%2FSony%20Logo%20inpainting%2Fweights 
+3. then run python sony_test_2_crop.py --checkpoint_dir model_logs/release_places2_256_deepfill_v2 
+
+
 # Generative Image Inpainting
 
 ![version](https://img.shields.io/badge/version-v2.0.0-green.svg?style=plastic)
